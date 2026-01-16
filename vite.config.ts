@@ -1,13 +1,29 @@
-// vite.config.ts
 import { defineConfig } from 'vite'
-import tsConfigPaths from 'vite-tsconfig-paths'
+import { devtools } from '@tanstack/devtools-vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
-import tailwindcss from '@tailwindcss/vite'
 import viteReact from '@vitejs/plugin-react'
+import viteTsConfigPaths from 'vite-tsconfig-paths'
+import { fileURLToPath, URL } from 'url'
+import { nitro } from 'nitro/vite'
+import tailwindcss from '@tailwindcss/vite'
 
-export default defineConfig({
-  server: {
-    port: 3000,
+const config = defineConfig({
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
   },
-  plugins: [tsConfigPaths(), tanstackStart(), viteReact(), tailwindcss()],
+  plugins: [
+    devtools(),
+    nitro(),
+    viteTsConfigPaths({
+      projects: ['./tsconfig.json'],
+    }),
+
+    tanstackStart(),
+    viteReact(),
+    tailwindcss()
+  ],
 })
+
+export default config
